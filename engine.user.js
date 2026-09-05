@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         BypassTools
-// @namespace    https://bypass.tools
+// @name         TUNG LINH BYPASS ENGINE
+// @namespace    https://github.com/tunglinh/bypass-engine
 // @version      5.0.2
-// @description  Advanced AdLink bypass powered by BypassTools (Based on F.E.A.R. and Evade.)
-// @author       BypassTools & EAS & Woozie & jiggey 
+// @description  TUNG LINH BYPASS - Advanced AdLink Bypass Engine (Based on BypassTools 5.0.2)
+// @author       TUNG LINH
 // @license      MIT
 // @match        *://linkvertise.com/*
 // @match        *://loot-link.com/*
@@ -219,13 +219,13 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js
 // @resource     NOTYF_CSS https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css
 // @require      https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js
-// @downloadURL  https://bypass.tools/BypassTools.user.js
-// @updateURL    https://bypass.tools/BypassTools.user.js
-// @homepageURL  https://bypass.tools
-// @supportURL   https://bypass.tools/support
+// @downloadURL  https://github.com/tunglinh/bypass-engine/raw/main/engine.user.js
+// @updateURL    https://github.com/tunglinh/bypass-engine/raw/main/engine.user.js
+// @homepageURL  https://github.com/tunglinh/bypass-engine
+// @supportURL   https://github.com/tunglinh/bypass-engine/issues
 // @run-at       document-start
 // ==/UserScript==
-globalThis.BT_BUILD_INFO={"code":"US","version":"5.0.2","label":"Userscript"};(function(root){"use strict";var palette=Object.freeze({background:"#090b0f",surface:"#11141a",raised:"#171b22",border:"#272d38",text:"#f4f6f8",muted:"#c3c9d1",subtle:"#8b93a1",brand:"#8758f5",active:"#9b75f7",success:"#4fc89b",warning:"#f6c453",error:"#ff6b75"});var css=String.raw`
+globalThis.BT_BUILD_INFO={"code":"TL","version":"5.0.2","label":"TUNG LINH ENGINE"};(function(root){"use strict";(function(root){"use strict";var palette=Object.freeze({background:"#090b0f",surface:"#11141a",raised:"#171b22",border:"#272d38",text:"#f4f6f8",muted:"#c3c9d1",subtle:"#8b93a1",brand:"#8758f5",active:"#9b75f7",success:"#4fc89b",warning:"#f6c453",error:"#ff6b75"});var css=String.raw`
 :host {
   --bt-bg: #090b0f;
   --bt-surface: #11141a;
