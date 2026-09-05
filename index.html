@@ -1,6 +1,3 @@
-<!-- ============================================================
-     FILE: index.html - WEB BYPASS 1 LINK MỖI NGÀY
-     ============================================================ -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -42,6 +39,14 @@
             border:none; border-radius:6px; color:#000;
             font-weight:700; cursor:pointer; margin-top:8px;
         }
+        .btn:disabled { background:#333; color:#666; }
+        .spinner {
+            display:inline-block; width:16px; height:16px;
+            border:2px solid #333; border-top-color:#00ff88;
+            border-radius:50%; animation:spin 0.8s linear infinite;
+            margin-right:8px; vertical-align:middle;
+        }
+        @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
         .result-box {
             margin-top:12px; padding:15px; background:#000;
             border:2px solid #ffcc00; border-radius:8px;
@@ -67,42 +72,41 @@
         .log-entry { color:#888; padding:2px; }
         .log-entry.success { color:#00ff88; }
         .log-entry.error { color:#ff4444; }
+        .log-entry.info { color:#4488ff; }
         .footer { margin-top:12px; font-size:9px; color:#555; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>TUNG LINH BYPASS</h1>
-        <div class="credit">⚡ GITHUB ACTIONS DAILY ⚡</div>
+        <div class="credit">⚡ DÁN LINK -> AUTO BYPASS ⚡</div>
 
         <div class="input-group">
-            <label>📎 LINK CẦN BYPASS (1 LINK/NGÀY)</label>
+            <label>📎 DÁN LINK CẦN BYPASS</label>
             <input type="url" id="inputLink" placeholder="https://linkvertise.com/...">
         </div>
 
-        <button class="btn" onclick="bypassDirect()">
-            ⚡ BYPASS NGAY ⚡
-        </button>
-
-        <button class="btn" style="background:#5865F2;color:#fff;" onclick="loadResults()">
-            📊 XEM KẾT QUẢ HÔM NAY
+        <button class="btn" id="btnBypass" onclick="submitLink()">
+            <span id="btnText">⚡ BYPASS LINK ⚡</span>
         </button>
 
         <div class="result-box" id="resultBox">
             <div style="color:#ccc;font-size:11px;margin-bottom:8px;">✅ KẾT QUẢ:</div>
             <div class="key-output" id="keyOutput">...</div>
-            <button class="btn-copy" onclick="copyResult()">📋 SAO CHÉP</button>
+            <button class="btn-copy" onclick="copyKey()">📋 SAO CHÉP</button>
         </div>
 
         <div class="log-box" id="logBox">
             <div class="log-entry info">[TUNG LINH] Sẵn sàng...</div>
         </div>
 
-        <div class="footer">© 2026 TUNG LINH BYPASS - Daily</div>
+        <div class="footer">© 2026 TUNG LINH BYPASS</div>
     </div>
 
     <script>
-        const RESULTS_URL = 'https://raw.githubusercontent.com/tunglinh-png/tunglinh-bypass-engine/main/results.json';
+        const GITHUB_TOKEN = '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';
+        const REPO = 'tunglinh-png/tunglinh-bypass-engine';
+        
         let currentResult = '';
 
         function addLog(msg, type) {
@@ -114,84 +118,118 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        async function bypassDirect() {
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function submitLink() {
             const link = document.getElementById('inputLink').value.trim();
-            if (!link) { addLog('Nhập link!', 'error'); return; }
+            const btn = document.getElementById('btnBypass');
+            const btnText = document.getElementById('btnText');
             
-            addLog('Bypass trực tiếp...', 'info');
-            
-            const apis = [
-                'https://bypass.tools/bypass?url={URL}',
-                'https://evade.bypass.tools/bypass?url={URL}',
-                'https://etel.bypass.tools/bypass?url={URL}',
-            ];
-            
-            const proxies = [
-                'https://api.allorigins.win/raw?url=',
-                'https://corsproxy.io/?url=',
-            ];
-            
-            for (const api of apis) {
-                const apiUrl = api.replace('{URL}', encodeURIComponent(link));
-                
-                // Thử trực tiếp
-                try {
-                    const response = await fetch(apiUrl);
-                    if (response.ok) {
-                        const text = await response.text();
-                        currentResult = text.substring(0, 300);
-                        showResult();
-                        return;
-                    }
-                } catch(e) {}
-                
-                // Thử proxy
-                for (const proxy of proxies) {
-                    try {
-                        const response = await fetch(proxy + encodeURIComponent(apiUrl));
-                        if (response.ok) {
-                            const text = await response.text();
-                            currentResult = text.substring(0, 300);
-                            showResult();
-                            return;
-                        }
-                    } catch(e) {}
-                }
+            if (!link) {
+                addLog('Nhập link!', 'error');
+                return;
             }
             
-            addLog('Không bypass được trực tiếp', 'error');
-            addLog('Link sẽ được bypass bởi GitHub Actions', 'info');
-        }
-
-        function showResult() {
-            document.getElementById('keyOutput').textContent = currentResult;
-            document.getElementById('resultBox').classList.add('show');
-            addLog('Kết quả!', 'success');
-        }
-
-        async function loadResults() {
-            addLog('Đọc kết quả từ GitHub...', 'info');
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span>ĐANG GỬI...';
+            document.getElementById('resultBox').classList.remove('show');
+            
+            addLog('Gửi link lên GitHub...', 'info');
             
             try {
-                const response = await fetch(RESULTS_URL);
-                if (response.ok) {
-                    const data = await response.json();
-                    currentResult = data.key || 'Không có key';
-                    document.getElementById('keyOutput').textContent = 
-                        'DATE: ' + data.date + '\n' +
-                        'KEY: ' + data.key;
-                    document.getElementById('resultBox').classList.add('show');
-                    addLog('Đã tải kết quả!', 'success');
-                } else {
-                    addLog('Chưa có results.json', 'error');
-                    addLog('Chờ GitHub Actions chạy lần đầu', 'info');
+                // Bước 1: Lưu link vào link.txt
+                const putResponse = await fetch(
+                    `https://api.github.com/repos/${REPO}/contents/link.txt`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'Bearer ' + GITHUB_TOKEN,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json',
+                        },
+                        body: JSON.stringify({
+                            message: 'Update bypass link',
+                            content: btoa(unescape(encodeURIComponent(link))),
+                        }),
+                    }
+                );
+                
+                if (!putResponse.ok) {
+                    const errorData = await putResponse.json();
+                    throw new Error('Gửi link lỗi: ' + (errorData.message || putResponse.status));
                 }
+                
+                addLog('Link đã gửi thành công!', 'success');
+                
+                // Bước 2: Trigger workflow
+                btnText.innerHTML = '<span class="spinner"></span>KÍCH HOẠT WORKFLOW...';
+                
+                const dispatchResponse = await fetch(
+                    `https://api.github.com/repos/${REPO}/actions/workflows/bypass.yml/dispatches`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + GITHUB_TOKEN,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json',
+                        },
+                        body: JSON.stringify({ ref: 'main' }),
+                    }
+                );
+                
+                if (!dispatchResponse.ok) {
+                    throw new Error('Kích hoạt workflow lỗi');
+                }
+                
+                addLog('Workflow đã kích hoạt!', 'success');
+                addLog('Chờ 45 giây cho workflow chạy...', 'info');
+                
+                // Bước 3: Chờ và đọc kết quả
+                btnText.innerHTML = '<span class="spinner"></span>ĐANG CHỜ KẾT QUẢ...';
+                
+                await sleep(45000);
+                
+                // Thử đọc results.json (thử 3 lần)
+                let key = '';
+                for (let i = 0; i < 3; i++) {
+                    const resultResponse = await fetch(
+                        `https://raw.githubusercontent.com/${REPO}/main/results.json?cache=${Date.now()}`
+                    );
+                    
+                    if (resultResponse.ok) {
+                        const data = await resultResponse.json();
+                        if (data.key && data.key !== 'KHÔNG BYPASS ĐƯỢC') {
+                            key = data.key;
+                            break;
+                        }
+                    }
+                    
+                    addLog('Chưa có kết quả - thử lại...', 'info');
+                    await sleep(15000);
+                }
+                
+                if (key) {
+                    currentResult = key;
+                    document.getElementById('keyOutput').textContent = key;
+                    document.getElementById('resultBox').classList.add('show');
+                    addLog('KẾT QUẢ: ' + key, 'success');
+                    
+                    navigator.clipboard.writeText(key).then(() => {
+                        addLog('Đã tự copy!', 'success');
+                    }).catch(() => {});
+                } else {
+                    addLog('Không bypass được - thử link khác', 'error');
+                }
+                
             } catch(e) {
                 addLog('Lỗi: ' + e.message, 'error');
             }
+            
+            btn.disabled = false;
+            btnText.innerHTML = '⚡ BYPASS LINK ⚡';
         }
 
-        function copyResult() {
+        function copyKey() {
             if (currentResult) {
                 navigator.clipboard.writeText(currentResult).then(() => {
                     addLog('Đã sao chép!', 'success');
@@ -200,7 +238,7 @@
         }
 
         addLog('TUNG LINH BYPASS sẵn sàng', 'success');
-        addLog('1 link/ngày - GitHub Actions tự động', 'info');
+        addLog('Dán link -> BYPASS tự động', 'info');
     </script>
 </body>
-              </html>
+</html>
