@@ -7,8 +7,19 @@ const BYPASS_APIS = [
     'https://etel.bypass.tools/bypass?url={URL}',
 ];
 
-// THAY LINK MỖI NGÀY:
-const TARGET_URL = 'https://linkvertise.com/THAY_LINK_CUA_BAN';
+// ĐỌC LINK TỪ FILE link.txt
+let TARGET_URL = '';
+try {
+    TARGET_URL = fs.readFileSync('link.txt', 'utf8').trim();
+} catch(e) {
+    console.log('Không có link.txt');
+    process.exit(0);
+}
+
+if (!TARGET_URL || TARGET_URL === 'THAY_LINK_CUA_BAN' || TARGET_URL.length < 10) {
+    console.log('Chưa có link hợp lệ');
+    process.exit(0);
+}
 
 function fetchUrl(url) {
     return new Promise((resolve, reject) => {
@@ -48,9 +59,7 @@ async function bypassLink(targetUrl) {
 }
 
 async function main() {
-    console.log('[TUNG LINH] Bắt đầu bypass...');
-    console.log('[TUNG LINH] Link: ' + TARGET_URL);
-    
+    console.log('[TUNG LINH] Link: ' + TARGET_URL.substring(0, 60));
     const key = await bypassLink(TARGET_URL);
     
     const output = {
