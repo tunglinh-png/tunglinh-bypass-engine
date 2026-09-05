@@ -1,0 +1,206 @@
+<!-- ============================================================
+     FILE: index.html - WEB BYPASS 1 LINK MỖI NGÀY
+     ============================================================ -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUNG LINH BYPASS</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background:#0a0a0a;
+            color:#00ff88;
+            font-family:'Courier New',monospace;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:15px;
+        }
+        .container {
+            background:#111;
+            border:2px solid #00ff88;
+            border-radius:15px;
+            padding:25px;
+            max-width:600px;
+            width:100%;
+            text-align:center;
+        }
+        h1 { font-size:22px; margin-bottom:5px; letter-spacing:2px; }
+        .credit { color:#ffcc00; font-size:12px; margin-bottom:15px; }
+        .input-group { margin-bottom:10px; text-align:left; }
+        label { display:block; font-size:10px; margin-bottom:4px; color:#ccc; text-transform:uppercase; }
+        input {
+            width:100%; padding:13px; background:#000;
+            border:1px solid #333; border-radius:6px;
+            color:#fff; font-size:13px;
+        }
+        .btn {
+            width:100%; padding:14px; background:#00ff88;
+            border:none; border-radius:6px; color:#000;
+            font-weight:700; cursor:pointer; margin-top:8px;
+        }
+        .result-box {
+            margin-top:12px; padding:15px; background:#000;
+            border:2px solid #ffcc00; border-radius:8px;
+            display:none;
+        }
+        .result-box.show { display:block; }
+        .key-output {
+            font-size:14px; font-weight:700; color:#000;
+            background:#fff; padding:12px; border-radius:6px;
+            word-break:break-all;
+        }
+        .btn-copy {
+            width:100%; padding:10px; background:#ffcc00;
+            border:none; border-radius:6px; color:#000;
+            font-weight:700; cursor:pointer; margin-top:8px;
+        }
+        .log-box {
+            margin-top:12px; padding:10px; background:#000;
+            border:1px solid #222; border-radius:6px;
+            max-height:200px; overflow-y:auto;
+            text-align:left; font-size:10px;
+        }
+        .log-entry { color:#888; padding:2px; }
+        .log-entry.success { color:#00ff88; }
+        .log-entry.error { color:#ff4444; }
+        .footer { margin-top:12px; font-size:9px; color:#555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TUNG LINH BYPASS</h1>
+        <div class="credit">⚡ GITHUB ACTIONS DAILY ⚡</div>
+
+        <div class="input-group">
+            <label>📎 LINK CẦN BYPASS (1 LINK/NGÀY)</label>
+            <input type="url" id="inputLink" placeholder="https://linkvertise.com/...">
+        </div>
+
+        <button class="btn" onclick="bypassDirect()">
+            ⚡ BYPASS NGAY ⚡
+        </button>
+
+        <button class="btn" style="background:#5865F2;color:#fff;" onclick="loadResults()">
+            📊 XEM KẾT QUẢ HÔM NAY
+        </button>
+
+        <div class="result-box" id="resultBox">
+            <div style="color:#ccc;font-size:11px;margin-bottom:8px;">✅ KẾT QUẢ:</div>
+            <div class="key-output" id="keyOutput">...</div>
+            <button class="btn-copy" onclick="copyResult()">📋 SAO CHÉP</button>
+        </div>
+
+        <div class="log-box" id="logBox">
+            <div class="log-entry info">[TUNG LINH] Sẵn sàng...</div>
+        </div>
+
+        <div class="footer">© 2026 TUNG LINH BYPASS - Daily</div>
+    </div>
+
+    <script>
+        const RESULTS_URL = 'https://raw.githubusercontent.com/tunglinh-png/tunglinh-bypass-engine/main/results.json';
+        let currentResult = '';
+
+        function addLog(msg, type) {
+            const box = document.getElementById('logBox');
+            const div = document.createElement('div');
+            div.className = 'log-entry ' + (type || 'info');
+            div.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function bypassDirect() {
+            const link = document.getElementById('inputLink').value.trim();
+            if (!link) { addLog('Nhập link!', 'error'); return; }
+            
+            addLog('Bypass trực tiếp...', 'info');
+            
+            const apis = [
+                'https://bypass.tools/bypass?url={URL}',
+                'https://evade.bypass.tools/bypass?url={URL}',
+                'https://etel.bypass.tools/bypass?url={URL}',
+            ];
+            
+            const proxies = [
+                'https://api.allorigins.win/raw?url=',
+                'https://corsproxy.io/?url=',
+            ];
+            
+            for (const api of apis) {
+                const apiUrl = api.replace('{URL}', encodeURIComponent(link));
+                
+                // Thử trực tiếp
+                try {
+                    const response = await fetch(apiUrl);
+                    if (response.ok) {
+                        const text = await response.text();
+                        currentResult = text.substring(0, 300);
+                        showResult();
+                        return;
+                    }
+                } catch(e) {}
+                
+                // Thử proxy
+                for (const proxy of proxies) {
+                    try {
+                        const response = await fetch(proxy + encodeURIComponent(apiUrl));
+                        if (response.ok) {
+                            const text = await response.text();
+                            currentResult = text.substring(0, 300);
+                            showResult();
+                            return;
+                        }
+                    } catch(e) {}
+                }
+            }
+            
+            addLog('Không bypass được trực tiếp', 'error');
+            addLog('Link sẽ được bypass bởi GitHub Actions', 'info');
+        }
+
+        function showResult() {
+            document.getElementById('keyOutput').textContent = currentResult;
+            document.getElementById('resultBox').classList.add('show');
+            addLog('Kết quả!', 'success');
+        }
+
+        async function loadResults() {
+            addLog('Đọc kết quả từ GitHub...', 'info');
+            
+            try {
+                const response = await fetch(RESULTS_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    currentResult = data.key || 'Không có key';
+                    document.getElementById('keyOutput').textContent = 
+                        'DATE: ' + data.date + '\n' +
+                        'KEY: ' + data.key;
+                    document.getElementById('resultBox').classList.add('show');
+                    addLog('Đã tải kết quả!', 'success');
+                } else {
+                    addLog('Chưa có results.json', 'error');
+                    addLog('Chờ GitHub Actions chạy lần đầu', 'info');
+                }
+            } catch(e) {
+                addLog('Lỗi: ' + e.message, 'error');
+            }
+        }
+
+        function copyResult() {
+            if (currentResult) {
+                navigator.clipboard.writeText(currentResult).then(() => {
+                    addLog('Đã sao chép!', 'success');
+                });
+            }
+        }
+
+        addLog('TUNG LINH BYPASS sẵn sàng', 'success');
+        addLog('1 link/ngày - GitHub Actions tự động', 'info');
+    </script>
+</body>
+              </html>
